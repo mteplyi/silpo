@@ -9,6 +9,9 @@
 # Dependency directories
 /node_modules/
 
+# Secrets
+/.session.json
+
 # Misc
 /.DS_Store
 

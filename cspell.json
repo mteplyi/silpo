@@ -1,0 +1,18 @@
+{
+  "version": "0.2",
+  "ignorePaths": [],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [
+    "appguid",
+    "Dalvik",
+    "ecom",
+    "GKWS6",
+    "idsrv",
+    "KHTML",
+    "silpo",
+    "singin"
+  ],
+  "ignoreWords": [],
+  "import": []
+}
