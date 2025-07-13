@@ -21,7 +21,7 @@ exports.parseBody = async (res) => {
  *  params: any
  *  res: Response
  *  resBody: any
- * }}
+ * }} params
  */
 exports.checkForError = ({ params, res, resBody }) => {
   /** @type {string | undefined} */

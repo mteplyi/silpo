@@ -1,13 +1,11 @@
-const graphqlService = require("./modules/graphql");
-const service = require("./service");
+const { graphqlService } = require("./modules/graphql/graphql.service");
+const { businessService } = require("./business.service");
 
 (async () => {
   // await graphqlService.makeLazyOrdersSnapshot()
   // await graphqlService.makeOrderItemsSnapshot()
 
-  // service.getPatternStats();
+  // businessService.getPatternStats();
 
-  // await service.executeWheel();
-
-  0x0;
+  await businessService.executeWheels();
 })();
