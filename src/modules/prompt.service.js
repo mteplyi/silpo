@@ -1,6 +1,6 @@
 const readline = require("node:readline/promises");
 
-const { sessionService } = require("./session.service");
+const { storageService } = require("./storage/storage.service");
 
 class PromptService {
   #phonePrefix = "+380";
@@ -11,7 +11,7 @@ class PromptService {
    */
   async getPhoneNumber() {
     /** @type {string[] | undefined} */
-    let history = await sessionService.get("phonesHistory");
+    let history = await storageService.get("phonesHistory");
 
     history = history
       ?.filter((historyItem) => historyItem.startsWith(this.#phonePrefix))
@@ -80,7 +80,7 @@ class PromptService {
     }
 
     /** @type {string[] | undefined} */
-    let history = await sessionService.get("phonesHistory");
+    let history = await storageService.get("phonesHistory");
 
     if (!history) {
       history = [];
@@ -90,7 +90,7 @@ class PromptService {
 
     history = [...new Set(history)];
 
-    await sessionService.set("phonesHistory", history);
+    await storageService.set("phonesHistory", history);
   }
 
   /**

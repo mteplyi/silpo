@@ -1,7 +1,7 @@
 const url = require("node:url");
 const querystring = require("node:querystring");
 
-const utils = require("../../utils");
+const utils = require("../utils");
 
 const authorizationClientId = "ecom--sf--mobile--flutter-app";
 const authorizationScope = "openid public-my offline_access";
@@ -55,7 +55,7 @@ const getV2LoginHeaders = () => {
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    "user-agent": "Dalvik/2.1.0 (Linux; U; Android 12; GKWS6 Build/W528JS)",
+    "user-agent": "Dalvik/2.1.0 (Linux; U; Android 11; GKWS6 Build/W528JS)",
     "x-requested-with": "ua.silpo.android",
   });
 };
@@ -73,7 +73,7 @@ const getAuthorizeHeaders = () => {
     "sec-fetch-site": "none",
     "sec-fetch-User": "?1",
     "Upgrade-Insecure-Requests": "1",
-    "user-agent": "Dalvik/2.1.0 (Linux; U; Android 12; GKWS6 Build/W528JS)",
+    "user-agent": "Dalvik/2.1.0 (Linux; U; Android 11; GKWS6 Build/W528JS)",
     "x-requested-with": "ua.silpo.android",
   });
 };

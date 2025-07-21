@@ -1,10 +1,16 @@
 const { authApi } = require("./auth.api");
-const { sessionService } = require("../session.service");
+const { storageService } = require("../storage/storage.service");
 const { promptService } = require("../prompt.service");
-const utils = require("../../utils");
+const utils = require("../utils");
 
 class AuthService {
   async authorize() {
+    if (process.env.PROMPT_ENABLED !== "true") {
+      throw new Error(
+        "Prompt is disabled but it is required for authentication (PROMPT_ENABLE env != true)"
+      );
+    }
+
     /**
      * TODO: generate, save and use it
      */
@@ -12,7 +18,7 @@ class AuthService {
     // const codeChallenge = utils.getCodeChallenge(codeVerifier);
 
     /** @type {string | undefined} */
-    let phone = await sessionService.get("phone");
+    let phone = await storageService.get("phone");
 
     if (!phone) {
       phone = await promptService.getPhoneNumber();
@@ -20,8 +26,6 @@ class AuthService {
 
     await authApi.loginByPhone({ phone });
 
-    // await session.unset("otp");
-    /** @type {string | undefined} */
     const otp = await promptService.getOtp();
 
     const { authCookies } = await authApi.loginWithOTP({ phone, otp });
@@ -42,7 +46,7 @@ class AuthService {
    * @returns {Promise<string>}
    */
   async renewAccessToken() {
-    let refreshToken = await sessionService.get("refreshToken");
+    let refreshToken = await storageService.get("refreshToken");
 
     /**
      * @type {{
@@ -84,7 +88,7 @@ class AuthService {
       });
     }
 
-    await sessionService.assign({
+    await storageService.assign({
       refreshToken,
       accessToken,
     });
@@ -96,7 +100,7 @@ class AuthService {
    * @returns {Promise<string>}
    */
   async getAccessToken() {
-    let accessToken = await sessionService.get("accessToken");
+    let accessToken = await storageService.get("accessToken");
 
     if (!accessToken) {
       console.log("Access token is missing, renew...");

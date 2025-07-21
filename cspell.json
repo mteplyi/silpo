@@ -1,5 +1,8 @@
 {
   "version": "0.2",
+  "ignoreRegExpList": [
+    "[^\\x00-\\x7F]+" // ignore non-ASCII characters (non-English)
+  ],
   "ignorePaths": [],
   "dictionaryDefinitions": [],
   "dictionaries": [],
@@ -8,9 +11,13 @@
     "appguid",
     "Dalvik",
     "ecom",
+    "fileb",
     "GKWS6",
     "idsrv",
     "KHTML",
+    "ONEZONE",
+    "OPENCOLLECTIVE",
+    "silp",
     "silpo",
     "singin"
   ],

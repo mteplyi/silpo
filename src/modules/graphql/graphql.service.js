@@ -2,8 +2,6 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { graphqlApi } = require("./graphql.api");
 
-const { lazyOrders } = require(path.resolve("./snapshots/lazyOrders.json"));
-
 class GraphqlService {
   async makeLazyOrdersSnapshot() {
     const lazyOrders = [];
@@ -31,6 +29,8 @@ class GraphqlService {
   }
 
   async makeOrderItemsSnapshot() {
+    const { lazyOrders } = require(path.resolve("./snapshots/lazyOrders.json"));
+
     const orderItems = [];
 
     for (let i = 0; i < lazyOrders.length; i++) {

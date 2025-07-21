@@ -1,9 +1,4 @@
-const fs = require("node:fs");
-const path = require("node:path");
-
-const utils = require("../../utils");
-
-const { lazyOrders } = require(path.resolve("./snapshots/lazyOrders.json"));
+const utils = require("../utils");
 
 const token = "NWNhM2UzZWRjNDllMjA2MjU0NDQzNTA2Y2I2M2U2M2Q";
 

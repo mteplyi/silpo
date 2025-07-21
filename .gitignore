@@ -10,10 +10,14 @@
 /node_modules/
 
 # Secrets
-/.session.json
+/.env
+/.state.json
 
 # Misc
 /.DS_Store
 
 # Playground
 /playground/
+
+# Build
+/lambda.zip

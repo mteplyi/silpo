@@ -1,5 +1,5 @@
 const { authService } = require("../auth/auth.service");
-const utils = require("../../utils");
+const utils = require("../utils");
 
 const defaultHeaders = /** @type {const} */ ({
   "accept-encoding": "gzip",
@@ -31,17 +31,6 @@ class MobileApi {
     });
 
     const resBody = await utils.parseBody(res);
-
-    // if (
-    //   resBody?.error?.errorString &&
-    //   ["TOKEN_EXPIRED", "TOKEN_INVALID"].includes(resBody.error.errorString)
-    // ) {
-    //   console.log(`Access token error ${resBody.error.errorString}, renew...`);
-    //   await authService.renewAccessToken();
-    //   console.log("Access token is renewed");
-
-    //   return this.request({ method, path });
-    // }
 
     utils.checkForError({
       params: { path, method, headers },

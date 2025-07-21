@@ -1,13 +1,13 @@
 const path = require("node:path");
 
-const { externalService } = require("./modules/external/external.service");
-const { mobileService } = require("./modules/mobile/mobile.service");
-const utils = require("./utils");
-
-const { orderItems } = require(path.resolve("./snapshots/orderItems.json"));
+const { externalService } = require("./external/external.service");
+const { mobileService } = require("./mobile/mobile.service");
+// const utils = require("./utils");
 
 class BusinessService {
   getProductPatternStats() {
+    const { orderItems } = require(path.resolve("./snapshots/orderItems.json"));
+
     let products = orderItems.flatMap((orderItem) =>
       orderItem.orderLines.map((orderLine) => ({
         orderDate: new Date(orderItem.createDate).toISOString(),
@@ -40,17 +40,27 @@ class BusinessService {
 
     console.log({ attempts });
 
-    while (attempts > 0) {
-      await utils.sleep(500 + Math.random() * 500);
+    if (attempts > -3 && attempts < 0) {
+      attempts = Math.abs(attempts);
+    }
+
+    /** @type {string[]} */
+    const promos = [];
+
+    for (let i = 0; i < attempts; i++) {
+      // await utils.sleep(500 + Math.random() * 500);
 
       const result = await externalService.spinWheel();
 
-      attempts = result.attemptQty;
+      const promo = `(${result.promoId}) ${result.signText?.trim()}${
+        result.rewardValue
+      } ${result.unitText?.trim()} ${result.couponDescription?.trim()}`;
 
-      console.log(
-        `(${result.promoId}) ${result.signText}${result.rewardValue} ${result.unitText} ${result.bB_CouponDescription}`
-      );
+      console.log(promo);
+      promos.push(promo);
     }
+
+    return promos;
   }
 
   async executeWheel() {
@@ -62,25 +72,30 @@ class BusinessService {
 
     console.log({ attempts });
 
-    while (attempts > 0) {
-      await utils.sleep(500 + Math.random() * 500);
+    /** @type {string[]} */
+    const promos = [];
+
+    for (let i = 0; i < attempts; i++) {
+      // await utils.sleep(500 + Math.random() * 500);
 
       const result = await mobileService.spinWheel();
 
-      attempts = result.attemptQty;
+      const promo = `(${result.promoId}) ${result.signText?.trim()}${
+        result.rewardValue
+      } ${result.unitText?.trim()} ${result.couponDescription?.trim()}`;
 
-      console.log(
-        `(${result.promoId}) ${result.signText}${result.rewardValue} ${result.unitText} ${result.couponDescription}`
-      );
+      console.log(promo);
+      promos.push(promo);
     }
+
+    return promos;
   }
 
   async executeWheels() {
-    await this.executeOldWheel();
+    const oldWheelPromos = await this.executeOldWheel();
+    const wheelPromos = await this.executeWheel();
 
-    console.log();
-
-    await this.executeWheel();
+    return { oldWheelPromos, wheelPromos };
   }
 }
 
