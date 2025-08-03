@@ -1,8 +1,7 @@
 const path = require("node:path");
 
-const { externalService } = require("./external/external.service");
-const { mobileService } = require("./mobile/mobile.service");
-// const utils = require("./utils");
+const { externalService } = require("../external/external.service");
+const { mobileService } = require("../mobile/mobile.service");
 
 class BusinessService {
   getProductPatternStats() {
@@ -40,7 +39,8 @@ class BusinessService {
 
     console.log({ attempts });
 
-    if (attempts > -3 && attempts < 0) {
+    // 3 err 3 ok -2 ok 0 -3
+    if (-3 < attempts && attempts < 0) {
       attempts = Math.abs(attempts);
     }
 
@@ -48,9 +48,15 @@ class BusinessService {
     const promos = [];
 
     for (let i = 0; i < attempts; i++) {
-      // await utils.sleep(500 + Math.random() * 500);
-
       const result = await externalService.spinWheel();
+
+      if (result.unitText === "Кількість спроб вичерпано") {
+        console.log("Spin was requested but attempts actually have ran out...");
+        break;
+      } else if (result.error.errorCode === 10) {
+        console.log("Spin was requested but timeout occurred...");
+        continue;
+      }
 
       const promo = `(${result.promoId}) ${result.signText?.trim()}${
         result.rewardValue
@@ -76,8 +82,6 @@ class BusinessService {
     const promos = [];
 
     for (let i = 0; i < attempts; i++) {
-      // await utils.sleep(500 + Math.random() * 500);
-
       const result = await mobileService.spinWheel();
 
       const promo = `(${result.promoId}) ${result.signText?.trim()}${

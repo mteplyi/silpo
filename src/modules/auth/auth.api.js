@@ -1,7 +1,7 @@
 const url = require("node:url");
 const querystring = require("node:querystring");
 
-const utils = require("../utils");
+const utils = require("../utils/general");
 
 const authorizationClientId = "ecom--sf--mobile--flutter-app";
 const authorizationScope = "openid public-my offline_access";

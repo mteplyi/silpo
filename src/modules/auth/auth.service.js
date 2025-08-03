@@ -1,13 +1,14 @@
 const { authApi } = require("./auth.api");
 const { storageService } = require("../storage/storage.service");
-const { promptService } = require("../prompt.service");
-const utils = require("../utils");
+const { promptService } = require("../prompt/prompt.service");
+const utils = require("../utils/general");
+const { config } = require("../config");
 
 class AuthService {
   async authorize() {
-    if (process.env.PROMPT_ENABLED !== "true") {
+    if (config.env !== "local") {
       throw new Error(
-        "Prompt is disabled but it is required for authentication (PROMPT_ENABLE env != true)"
+        "Prompt is not available in non-local env but it is required for authentication"
       );
     }
 
@@ -33,11 +34,7 @@ class AuthService {
 
     const newTokenData = await authApi.getNewTokenViaAuth({ authCode });
 
-    try {
-      await promptService.appendPhonesHistory({ phone });
-    } catch (err) {
-      console.error(err);
-    }
+    await promptService.appendPhonesHistory({ phone });
 
     return newTokenData;
   }

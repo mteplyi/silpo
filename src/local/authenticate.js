@@ -1,4 +1,4 @@
-require("dotenv/config");
+require("../modules/entry/initGrace");
 
 const { authService } = require("../modules/auth/auth.service");
 

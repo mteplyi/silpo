@@ -1,6 +1,6 @@
 const readline = require("node:readline/promises");
 
-const { storageService } = require("./storage/storage.service");
+const { storageService } = require("../storage/storage.service");
 
 class PromptService {
   #phonePrefix = "+380";

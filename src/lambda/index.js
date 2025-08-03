@@ -1,4 +1,7 @@
-const { businessService } = require("../modules/business.service");
+require("../modules/entry/initGrace");
+
+const { businessService } = require("../modules/business/business.service");
+const { inspectDeep } = require("../modules/utils/inspectDeep");
 const {
   getHttpRequestParams,
   isForbiddenHttpParams,
@@ -60,16 +63,18 @@ exports.handler = async (event) => {
       };
     }
   } catch (err) {
-    console.error(err);
-
-    if (httpRequestParams) {
-      const body = renderTemplate(["Failed..."]);
-
-      return {
-        statusCode: 500,
-        headers: htmlHeaders,
-        body,
-      };
+    if (!httpRequestParams) {
+      throw err;
     }
+
+    console.error(inspectDeep(err));
+
+    const body = renderTemplate(["Failed..."]);
+
+    return {
+      statusCode: 500,
+      headers: htmlHeaders,
+      body,
+    };
   }
 };

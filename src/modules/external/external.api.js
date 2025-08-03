@@ -1,5 +1,5 @@
 const { authService } = require("../auth/auth.service");
-const utils = require("../utils");
+const utils = require("../utils/general");
 
 const defaultHeaders = /** @type {const} */ ({
   "accept-encoding": "gzip",
@@ -75,7 +75,7 @@ class ExternalApi {
      *  }
      *  gameMask: { maskOn: false }
      *  error: {
-     *    errorCode: 0
+     *    errorCode: number
      *    errorString: "OK"
      *    errorTrace: null
      *    httpStatusCode: 200
@@ -94,11 +94,11 @@ class ExternalApi {
   async postWheelTry() {
     /**
      * @type {{
-     *  promoId: 254389
-     *  signText: "×"
-     *  rewardValue: 5
-     *  unitText: "балів"
-     *  couponDescription: "за купівлю зубних щіток щоб усмішка завжди була на всі 100 :)"
+     *  promoId: number
+     *  signText: "×" | null
+     *  rewardValue: 5 | null
+     *  unitText: "балів" | "Кількість спроб вичерпано" | null
+     *  couponDescription: "за купівлю зубних щіток щоб усмішка завжди була на всі 100 :)" | null
      *  attemptQty: number
      *  listImages: [
      *    "https://content.silpo.ua/promo/Wheel_of_Fortune/2024/dd7e5628cb_720x720.png",
@@ -107,29 +107,42 @@ class ExternalApi {
      *    "https://content.silpo.ua/promo/Wheel_of_Fortune/2024/dd7e5628cb_480x480.png",
      *    "https://content.silpo.ua/promo/Wheel_of_Fortune/2024/dd7e5628cb_400x400.png",
      *    "https://content.silpo.ua/promo/Wheel_of_Fortune/2024/dd7e5628cb_280x246.png",
-     *  ]
-     *  attemptsExhaustedTextOne: "ПОГРАЛИ - ЧАС ВІДПОЧИТИ!"
-     *  attemptsExhaustedTextTwo: "Повертайтеся завтра!"
-     *  congratulationTextOne: "Круто покрутили!"
-     *  congratulationTextTwo: "Наші вітання - за ваші обертання!"
-     *  motivationTextOne: "Хапайте удачу за колесо!"
-     *  motivationTextTwo: "Швидше обертайте - виграш чекає!"
-     *  bB_RewardValue: 5
-     *  bB_UnitText: "балобонусів"
-     *  bB_CouponDescription: "за купівлю зубних щіток щоб усмішка завжди була на всі 100 :)"
+     *  ] | null
+     *  attemptsExhaustedTextOne: "ПОГРАЛИ - ЧАС ВІДПОЧИТИ!" | null
+     *  attemptsExhaustedTextTwo: "Повертайтеся завтра!" | null
+     *  congratulationTextOne: "Круто покрутили!" | null
+     *  congratulationTextTwo: "Наші вітання - за ваші обертання!" | null
+     *  motivationTextOne: "Хапайте удачу за колесо!" | null
+     *  motivationTextTwo: "Швидше обертайте - виграш чекає!" | null
+     *  bB_RewardValue: 5 | null
+     *  bB_UnitText: "балобонусів" | ""
+     *  bB_CouponDescription: "за купівлю зубних щіток щоб усмішка завжди була на всі 100 :)" | null
      *  error: {
-     *    errorCode: 0
-     *    errorString: "OK"
+     *    errorCode: number
+     *    errorString: string
      *    errorTrace: null
      *    httpStatusCode: 200
      *  }
      *  headers: null
      * }}
      */
-    const resBody = await this.request({
-      method: "post",
-      path: "/v1/wheel/try",
-    });
+    let resBody;
+
+    try {
+      resBody = await this.request({
+        method: "post",
+        path: "/v1/wheel/try",
+      });
+    } catch (err) {
+      /**
+       * Sometimes timeout occurs. In such case the wheel usually is spined but with a noticeable delay.
+       */
+      if (err.cause?.resBody?.error?.errorCode === 10) {
+        ({ resBody } = err.cause);
+      } else {
+        throw err;
+      }
+    }
 
     return resBody;
   }

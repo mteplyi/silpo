@@ -1,3 +1,4 @@
+const { config } = require("../config");
 const { S3Repository } = require("../s3/s3.repository");
 const { FileStateStrategy } = require("./strategies/fileState.strategy");
 const { S3StateStrategy } = require("./strategies/s3State.strategy");
@@ -125,19 +126,19 @@ class StorageService {
 /** @type {StateStrategy} */
 let stateStrategy;
 
-switch (process.env.STATE_STRATEGY ?? "FILE") {
-  case "FILE":
+switch (config.stateStrategy) {
+  case "file":
     stateStrategy = new FileStateStrategy();
     break;
 
-  case "S3":
+  case "s3":
     const s3Repository = new S3Repository();
     stateStrategy = new S3StateStrategy(s3Repository);
     break;
 
   default:
-    throw new Error("STATE_STRATEGY env is invalid", {
-      cause: { STATE_STRATEGY: process.env.STATE_STRATEGY },
+    throw new Error("stateStrategy env is invalid", {
+      cause: { stateStrategy: config.stateStrategy },
     });
 }
 

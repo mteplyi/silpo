@@ -1,7 +1,7 @@
-const { randomInt, createHash } = require("node:crypto");
-const { promisify } = require("node:util");
+const crypto = require("node:crypto");
+const util = require("node:util");
 
-exports.sleep = promisify(setTimeout);
+exports.sleep = util.promisify(setTimeout);
 
 /**
  * @param {Response} res
@@ -65,7 +65,7 @@ exports.parseJwt = (token) => {
 /**
  * @type {(min: number, max: number) => Promise<number>}
  */
-const randomIntAsync = promisify(randomInt);
+const randomIntAsync = util.promisify(crypto.randomInt);
 
 /**
  * @returns {Promise<string>}
@@ -95,7 +95,8 @@ exports.getCodeVerifier = async () => {
  * @returns {string}
  */
 exports.getCodeChallenge = (codeVerifier) => {
-  const codeChallenge = createHash("sha256")
+  const codeChallenge = crypto
+    .createHash("sha256")
     .update(codeVerifier)
     .digest("base64url");
 

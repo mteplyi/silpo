@@ -1,5 +1,5 @@
 const { authService } = require("../auth/auth.service");
-const utils = require("../utils");
+const utils = require("../utils/general");
 
 const defaultHeaders = /** @type {const} */ ({
   "accept-encoding": "gzip",
